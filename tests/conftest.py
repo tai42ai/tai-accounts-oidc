@@ -1,4 +1,4 @@
-"""Test seams for tai-accounts-oidc.
+"""Test seams for tai42-accounts-oidc.
 
 Three fakes stand in for the plugin's I/O:
 
@@ -13,8 +13,8 @@ Three fakes stand in for the plugin's I/O:
 - Registry isolation for BOTH the accounts and identity registries, plus a
   settings/holder/runtimes reset, so an env-dependent test never leaks.
 
-The contract ``tai_app`` handle is bound to a no-op fake at import so the route
-module's ``@tai_app.http.custom_route`` decorators (and the ``on_startup`` guard)
+The contract ``tai42_app`` handle is bound to a no-op fake at import so the route
+module's ``@tai42_app.http.custom_route`` decorators (and the ``on_startup`` guard)
 register cleanly under test.
 """
 
@@ -61,9 +61,9 @@ class _FakeApp:
 
 _fake_app = _FakeApp()
 
-from tai_contract.app import tai_app  # noqa: E402
+from tai42_contract.app import tai42_app  # noqa: E402
 
-tai_app.bind(_fake_app)
+tai42_app.bind(_fake_app)
 
 
 # -- FakeRedis ------------------------------------------------------------------
@@ -122,7 +122,7 @@ class FakeRedis:
 
 
 def make_client_ctx(fake: FakeRedis):
-    """A drop-in for ``tai_kit.clients.client_ctx`` yielding ``fake`` for any client
+    """A drop-in for ``tai42_kit.clients.client_ctx`` yielding ``fake`` for any client
     class, ignoring the settings/pool/fresh arguments."""
 
     @asynccontextmanager
@@ -286,8 +286,8 @@ def make_provider(monkeypatch: pytest.MonkeyPatch):
     ``None`` to omit them and exercise the required-setting guards."""
     from types import SimpleNamespace
 
-    from tai_accounts_oidc import provider as provider_mod
-    from tai_accounts_oidc.settings import accounts_oidc_settings
+    from tai42_accounts_oidc import provider as provider_mod
+    from tai42_accounts_oidc.settings import accounts_oidc_settings
 
     def _make(
         providers: list[dict[str, Any]],
@@ -324,8 +324,8 @@ def _isolate_registries() -> Iterator[None]:
     """Snapshot + restore BOTH module-level registries around each test so a
     registration (or clear) never leaks. The plugin's import-time ``accounts-oidc``
     registration is captured by the baseline snapshot."""
-    from tai_contract.access_control import registry as identity_registry
-    from tai_contract.accounts import registry as accounts_registry
+    from tai42_contract.access_control import registry as identity_registry
+    from tai42_contract.accounts import registry as accounts_registry
 
     identity_saved = dict(identity_registry._REGISTRY)
     accounts_saved = dict(accounts_registry._REGISTRY)
@@ -342,8 +342,8 @@ def _isolate_registries() -> Iterator[None]:
 def _reset_plugin_state() -> Iterator[None]:
     """Reset the settings cache, the settings holder, and the runtime registry so
     an env-dependent test starts clean and never leaks into the next."""
-    from tai_accounts_oidc import provider
-    from tai_accounts_oidc.settings import accounts_oidc_settings
+    from tai42_accounts_oidc import provider
+    from tai42_accounts_oidc.settings import accounts_oidc_settings
 
     accounts_oidc_settings.cache_clear()
     provider.reset_provider_settings()

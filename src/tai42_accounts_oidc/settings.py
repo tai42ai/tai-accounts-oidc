@@ -20,7 +20,7 @@ from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import SettingsConfigDict
-from tai_kit.settings import TaiBaseSettings, settings_cache
+from tai42_kit.settings import TaiBaseSettings, settings_cache
 
 # The presets a provider row may name. ``github`` selects the plain-OAuth2 path
 # (no OIDC discovery, no id_token); the rest are OIDC discovery issuers.
@@ -123,7 +123,7 @@ class OidcAccountsSettings(TaiBaseSettings):
         # settings load. Preset/issuer coherence is validated by resolving each
         # row through presets (a preset missing its required issuer raises here,
         # naming the field), so a misconfigured provider never boots.
-        from tai_accounts_oidc.presets import resolve_provider
+        from tai42_accounts_oidc.presets import resolve_provider
 
         seen: set[str] = set()
         for config in self.providers:

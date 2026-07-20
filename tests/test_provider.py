@@ -7,13 +7,13 @@ import time
 from typing import Any
 
 import pytest
-from tai_contract.access_control.identity import AuthIdentity
-from tai_contract.access_control.registry import get_identity_provider_factory
-from tai_contract.accounts import get_accounts_provider_factory
-from tai_kit.net.jwt import JwksFetchError
+from tai42_contract.access_control.identity import AuthIdentity
+from tai42_contract.access_control.registry import get_identity_provider_factory
+from tai42_contract.accounts import get_accounts_provider_factory
+from tai42_kit.net.jwt import JwksFetchError
 
-from tai_accounts_oidc import provider as provider_mod
-from tai_accounts_oidc.provider import OidcAccountsProvider
+from tai42_accounts_oidc import provider as provider_mod
+from tai42_accounts_oidc.provider import OidcAccountsProvider
 
 from .conftest import FakeRedis
 

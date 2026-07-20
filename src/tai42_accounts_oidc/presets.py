@@ -19,7 +19,7 @@ from typing import Literal
 
 from pydantic import SecretStr
 
-from tai_accounts_oidc.settings import OidcProviderConfig
+from tai42_accounts_oidc.settings import OidcProviderConfig
 
 # GitHub's plain-OAuth2 endpoints (no discovery document exists). Module
 # constants so they are the single source of truth; the login flow references

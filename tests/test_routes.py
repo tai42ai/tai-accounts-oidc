@@ -11,8 +11,8 @@ import pytest
 from joserfc import jwt as joserfc_jwt
 from joserfc.jwk import RSAKey
 
-from tai_accounts_oidc import oauth, routes
-from tai_accounts_oidc import provider as provider_mod
+from tai42_accounts_oidc import oauth, routes
+from tai42_accounts_oidc import provider as provider_mod
 
 from .conftest import build_request, response_json
 
@@ -170,7 +170,7 @@ async def test_full_login_flow(make_provider: Any, oidc_server: Any) -> None:
     token = data["token"]
 
     # The minted session carries the idle TTL from settings.
-    from tai_accounts_oidc.settings import accounts_oidc_settings
+    from tai42_accounts_oidc.settings import accounts_oidc_settings
 
     assert fake.expirations[provider_mod._session_key(token)] == accounts_oidc_settings().session_idle_seconds
 

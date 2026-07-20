@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from tai_accounts_oidc.settings import OidcAccountsSettings
+from tai42_accounts_oidc.settings import OidcAccountsSettings
 
 
 def _provider(**over: object) -> dict[str, object]:

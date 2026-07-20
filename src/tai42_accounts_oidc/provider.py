@@ -12,7 +12,7 @@ Registered ONCE at import via ``register_accounts_provider("accounts-oidc", ...)
 since an accounts provider IS the token answerer for its own sessions.
 
 **The settings holder (module-level).** Route handlers register through the bare
-``@tai_app.http.custom_route`` decorator and take no settings argument, and the
+``@tai42_app.http.custom_route`` decorator and take no settings argument, and the
 banned-api forbids importing the skeleton — so there is no ambient channel from a
 handler to the ``AccountsProviderSettings`` object (its ``.redis`` reach) the
 factory receives. ``__init__`` populates ``_provider_settings`` here; the routes
@@ -32,23 +32,23 @@ import time
 from typing import TYPE_CHECKING, Any, cast
 
 import httpx
-from tai_contract.access_control.identity import AuthIdentity
-from tai_contract.accounts import (
+from tai42_contract.access_control.identity import AuthIdentity
+from tai42_contract.accounts import (
     AccountsProvider,
     ButtonMethod,
     LoginMethod,
     register_accounts_provider,
 )
-from tai_kit.clients import RedisConnectionSettings, client_ctx
-from tai_kit.clients.impl.redis import RedisClient
-from tai_kit.net.jwt import JwksCache, JwtVerifyError, OidcDiscovery, fetch_discovery
-from tai_kit.utils.data.string_util import hash_api_key
+from tai42_kit.clients import RedisConnectionSettings, client_ctx
+from tai42_kit.clients.impl.redis import RedisClient
+from tai42_kit.net.jwt import JwksCache, JwtVerifyError, OidcDiscovery, fetch_discovery
+from tai42_kit.utils.data.string_util import hash_api_key
 
-from tai_accounts_oidc.presets import GITHUB_AUTHORIZE_URL, ResolvedProvider, resolve_provider
-from tai_accounts_oidc.settings import accounts_oidc_settings
+from tai42_accounts_oidc.presets import GITHUB_AUTHORIZE_URL, ResolvedProvider, resolve_provider
+from tai42_accounts_oidc.settings import accounts_oidc_settings
 
 if TYPE_CHECKING:
-    from tai_contract.accounts import AccountsProviderSettings
+    from tai42_contract.accounts import AccountsProviderSettings
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ def provider_settings() -> AccountsProviderSettings:
     """
     if _provider_settings is None:
         raise RuntimeError(
-            "tai-accounts-oidc settings holder is unpopulated: the provider was never "
+            "tai42-accounts-oidc settings holder is unpopulated: the provider was never "
             "instantiated. The accounts kind requires ACCESS_CONTROL_ENABLE=true and "
             "'accounts-oidc' present in ACCESS_CONTROL_AUTH_PROVIDERS."
         )
@@ -114,7 +114,7 @@ def reset_provider_settings() -> None:
 
 
 def _redis_conn() -> RedisConnectionSettings:
-    # tai-contract types the injected ``redis`` as ``Any``; kit's ``client_ctx``
+    # tai42-contract types the injected ``redis`` as ``Any``; kit's ``client_ctx``
     # takes a NOMINAL settings param, so cast the structural value at the bridge.
     return cast("RedisConnectionSettings", provider_settings().redis)
 
@@ -330,6 +330,6 @@ class OidcAccountsProvider(AccountsProvider):
 # Module-level registration: one call lands the factory in BOTH the accounts
 # registry (methods aggregation) and the identity registry (session-token
 # resolution) under the same name — an accounts provider IS the identity answerer
-# for its own sessions. No ``tai_app`` handle is involved; the plugin registers at
-# its own import so ``lifecycle_modules: ["tai_accounts_oidc"]`` triggers it.
+# for its own sessions. No ``tai42_app`` handle is involved; the plugin registers at
+# its own import so ``lifecycle_modules: ["tai42_accounts_oidc"]`` triggers it.
 register_accounts_provider("accounts-oidc", OidcAccountsProvider)

@@ -1,4 +1,4 @@
-# tai-accounts-oidc
+# tai42-accounts-oidc
 
 [![CI](https://github.com/tai42ai/tai-accounts-oidc/actions/workflows/ci.yml/badge.svg)](https://github.com/tai42ai/tai-accounts-oidc/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -8,16 +8,16 @@ installable plugin that lets humans sign in through an external identity provide
 (Auth0, Google, Okta, Keycloak, Microsoft Entra, or GitHub) and mints opaque
 `tai-sess-…` session tokens backed by Redis.
 
-Importing the package registers the provider in `tai-contract`'s module-level
+Importing the package registers the provider in `tai42-contract`'s module-level
 accounts registry via `register_accounts_provider("accounts-oidc", …)`. That one
 call ALSO lands the factory in the identity registry under the same name — an
-accounts provider IS the token answerer for its own sessions. No `tai_app` handle
+accounts provider IS the token answerer for its own sessions. No `tai42_app` handle
 is involved, so it registers in any process that imports it. A deployment selects
 it by including `accounts-oidc` in the access-control `auth_providers` list; the
 plugin never inserts itself.
 
-Its only tai-\* dependencies are `tai-contract` (the accounts ABC, the login-method
-models, and the dual-registry registration) and `tai-kit` (the Redis client, the
+Its only tai-\* dependencies are `tai42-contract` (the accounts ABC, the login-method
+models, and the dual-registry registration) and `tai42-kit` (the Redis client, the
 session-token hash, and the OIDC/JWT helper). It **never** imports the skeleton —
 the plugin is contract-facing, and the import is banned by ruff.
 
@@ -40,7 +40,7 @@ platform-level story:
 ```
 Browser → GET  /api/login/oidc/{provider}/authorize  → 302 issuer (state + PKCE + nonce)
 Issuer  → GET  /api/login/oidc/{provider}/callback   → code→token exchange,
-                                                        id_token verified (tai-kit),
+                                                        id_token verified (tai42-kit),
                                                         session minted (Redis),
                                                         302 /login?sso={code}
 SPA     → POST /api/login/sso/exchange {code}         → {token, user_id} (once)
@@ -151,7 +151,7 @@ token is stored.
 
 ### Running both `tai-sess-` accounts members
 
-If a deployment installs BOTH this provider and `tai-accounts-postgres`, they share
+If a deployment installs BOTH this provider and `tai42-accounts-postgres`, they share
 the `tai-sess-` prefix and can only tell "not mine" from "mine" by a store lookup.
 Because a provider error propagates (never falls through to a later provider —
 correct for security), a store outage in an EARLIER `auth_providers` member
@@ -176,7 +176,7 @@ Nothing is on PyPI yet, so install from source:
 ```bash
 git clone https://github.com/tai42ai/tai-accounts-oidc
 cd tai-skeleton   # or your own app checkout
-uv add --editable ../tai-accounts-oidc    # once published: uv add tai-accounts-oidc
+uv add --editable ../tai-accounts-oidc    # once published: uv add tai42-accounts-oidc
 ```
 
 ## Development
@@ -189,7 +189,7 @@ uv run pyright
 uv run pytest
 ```
 
-`[tool.uv.sources]` resolves `tai-contract` and `tai-kit` from sibling checkouts
+`[tool.uv.sources]` resolves `tai42-contract` and `tai42-kit` from sibling checkouts
 for local development; the published wheel floors them from the index.
 
 ## License

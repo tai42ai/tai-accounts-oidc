@@ -5,7 +5,7 @@ state + PKCE + nonce), ``callback`` (code exchange, id_token verification, sessi
 mint, 302 back with a one-time SSO code), and ``sso/exchange`` (the SPA trades
 that code for the session — never a token in the URL).
 
-Registered through the bare ``@tai_app.http.custom_route`` decorator (``authed``
+Registered through the bare ``@tai42_app.http.custom_route`` decorator (``authed``
 is OpenAPI metadata only; runtime public-ness comes from the always-public
 ``/api/login`` prefix). Handlers take no settings argument: they reach the
 skeleton-injected ``settings.redis`` (state record, SSO code) EXCLUSIVELY through
@@ -28,17 +28,17 @@ import httpx
 from pydantic import BaseModel
 from starlette.requests import Request
 from starlette.responses import JSONResponse, RedirectResponse, Response
-from tai_contract.app import tai_app
-from tai_kit.net.jwt import JwtError, verify_jwt
+from tai42_contract.app import tai42_app
+from tai42_kit.net.jwt import JwtError, verify_jwt
 
-from tai_accounts_oidc import oauth, provider
-from tai_accounts_oidc.presets import (
+from tai42_accounts_oidc import oauth, provider
+from tai42_accounts_oidc.presets import (
     GITHUB_AUTHORIZE_URL,
     GITHUB_TOKEN_URL,
     GITHUB_USERINFO_URL,
     ResolvedProvider,
 )
-from tai_accounts_oidc.settings import accounts_oidc_settings
+from tai42_accounts_oidc.settings import accounts_oidc_settings
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ _CALLBACK_PATH_TEMPLATE = "/api/login/oidc/{name}/callback"
 # cannot be redeemed in another. SameSite=Lax still reaches the callback (a
 # top-level GET navigation from the issuer); the path scopes it to the login flow;
 # the Secure flag tracks the served scheme (see _flow_cookie_secure).
-_FLOW_COOKIE = "tai_oidc_flow"
+_FLOW_COOKIE = "tai42_oidc_flow"
 _FLOW_COOKIE_PATH = "/api/login/oidc"
 
 
@@ -117,7 +117,7 @@ def _flow_cookie_secure() -> bool:
     return urlsplit(_public_base_url()).scheme == "https"
 
 
-@tai_app.http.custom_route(
+@tai42_app.http.custom_route(
     "/api/login/oidc/{provider}/authorize",
     methods=["GET"],
     summary="Begin an OIDC/OAuth2 login",
@@ -186,7 +186,7 @@ async def oidc_authorize(request: Request) -> Response:
     return response
 
 
-@tai_app.http.custom_route(
+@tai42_app.http.custom_route(
     "/api/login/oidc/{provider}/callback",
     methods=["GET"],
     summary="Complete an OIDC/OAuth2 login",
@@ -386,7 +386,7 @@ async def _post_token(url: str, data: dict[str, str]) -> dict:
     return payload
 
 
-@tai_app.http.custom_route(
+@tai42_app.http.custom_route(
     "/api/login/sso/exchange",
     methods=["POST"],
     summary="Exchange a one-time SSO code for a session",
@@ -414,7 +414,7 @@ async def sso_exchange(request: Request) -> Response:
     return _session_response(record["token"], record["user_id"])
 
 
-@tai_app.lifecycle.on_startup
+@tai42_app.lifecycle.on_startup
 def _assert_accounts_provider_instantiated() -> None:
     """Fail boot loudly if the login routes are mounted but the provider was never
     instantiated — i.e. access control is disabled, so ``settings.redis`` was never
@@ -424,7 +424,7 @@ def _assert_accounts_provider_instantiated() -> None:
     contradictory AC-disabled case."""
     if not provider.provider_settings_populated():
         raise RuntimeError(
-            "tai-accounts-oidc routes are mounted but its provider was never instantiated — "
+            "tai42-accounts-oidc routes are mounted but its provider was never instantiated — "
             "the accounts kind requires ACCESS_CONTROL_ENABLE=true and 'accounts-oidc' present "
             "in ACCESS_CONTROL_AUTH_PROVIDERS"
         )

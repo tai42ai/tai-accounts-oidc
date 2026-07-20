@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from tai_accounts_oidc.presets import resolve_provider
-from tai_accounts_oidc.settings import OidcProviderConfig
+from tai42_accounts_oidc.presets import resolve_provider
+from tai42_accounts_oidc.settings import OidcProviderConfig
 
 
 def _config(**over: object) -> OidcProviderConfig:

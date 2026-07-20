@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 import hashlib
 
-from tai_accounts_oidc import oauth
+from tai42_accounts_oidc import oauth
 
 _KEY = b"hmac-signing-secret"
 
