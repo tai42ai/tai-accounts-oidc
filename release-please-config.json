@@ -5,7 +5,11 @@
   "packages": {
     ".": {
       "skip-changelog": true,
-      "package-name": "tai42-accounts-oidc"
+      "package-name": "tai42-accounts-oidc",
+      "extra-files": [
+        "tai-plugin.yml",
+        "src/tai42_accounts_oidc/tai-plugin.yml"
+      ]
     }
   }
 }
