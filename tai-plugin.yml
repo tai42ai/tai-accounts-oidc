@@ -7,7 +7,7 @@ description: "OIDC/OAuth2 login accounts provider for the TAI ecosystem: an inst
 license: Apache-2.0
 homepage: https://tai42.ai
 repository: https://github.com/tai42ai/tai-accounts-oidc
-contract: ">=0.2,<0.3"
+contract: ">=0.3,<0.4"
 categories: [identity, security]
 tags: [accounts, identity, login, oidc, oauth2, sso, auth]
 permissions:
